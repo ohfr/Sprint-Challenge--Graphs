@@ -81,87 +81,76 @@ while len(dftStack) > 0 and loop:
 
     exits = cur.get_exits()
 
-    print('current room', cur.id)
+    # print('current room', cur.id)
 
-    if exits:
-        if cur.id not in visited:
-            visited[cur.id] = {}
-            for path in exits:
-                visited[cur.id][path] = '?'
+    if cur.id not in visited:
+        visited[cur.id] = {}
+        for path in exits:
+            visited[cur.id][path] = '?'
 
-            traversal_path.append(exits[-1])
-            player.travel(exits[-1])
-            dftStack.append(player.current_room)
-            visited[cur.id][exits[-1]] = player.current_room.id
+        traversal_path.append(exits[-1])
+        player.travel(exits[-1])
+        dftStack.append(player.current_room)
+        visited[cur.id][exits[-1]] = player.current_room.id
 
-            visited[player.current_room.id] = {}
-            for paths in player.current_room.get_exits():
-                  visited[player.current_room.id][paths] = '?'
+        visited[player.current_room.id] = {}
+        for paths in player.current_room.get_exits():
+                visited[player.current_room.id][paths] = '?'
 
-            if exits[-1] == 'n':
-                visited[player.current_room.id]['s'] = cur.id
-            elif exits[-1] == 'e':
-                visited[player.current_room.id]['w'] = cur.id
-            elif exits[-1] == 'w':
-                visited[player.current_room.id]['e'] = cur.id
-            elif exits[-1] == 's':
-                visited[player.current_room.id]['n'] = cur.id
-                
-        else:
-            print("hit else", cur.id)
-            i = -1
-            randomChoice = exits[i]
-            while visited[cur.id][randomChoice] != '?':
-                if i == len(exits)-1:
-                    break
-                randomChoice = exits[i]
-                i+=1
-
-            if visited[cur.id][randomChoice] == '?':
-                traversal_path.append(randomChoice)
-                player.travel(randomChoice)
-                dftStack.append(player.current_room)
-                visited[cur.id][randomChoice] = player.current_room.id
-                
-                if player.current_room.id not in visited:
-                    visited[player.current_room.id] = {}
-                    for paths in player.current_room.get_exits():
-                        visited[player.current_room.id][paths] = '?'
-
-                if randomChoice == 'n':
-                    visited[player.current_room.id]['s'] = cur.id
-                elif randomChoice == 'e':
-                    visited[player.current_room.id]['w'] = cur.id
-                elif randomChoice == 'w':
-                    visited[player.current_room.id]['e'] = cur.id
-                elif randomChoice == 's':
-                    visited[player.current_room.id]['n'] = cur.id                    
-            else:
-                # print("currently couldnt get the path", cur.id)
-                path = bfs(cur, visited)
-
-                print(path, cur.id, 'path')
-
-                if path:
-                    backtrack(player.current_room.id, path, visited)
-                    dftStack.append(player.current_room)
-                else:
-                    loop = False
-                    break
+        if exits[-1] == 'n':
+            visited[player.current_room.id]['s'] = cur.id
+        elif exits[-1] == 'e':
+            visited[player.current_room.id]['w'] = cur.id
+        elif exits[-1] == 'w':
+            visited[player.current_room.id]['e'] = cur.id
+        elif exits[-1] == 's':
+            visited[player.current_room.id]['n'] = cur.id
+            
     else:
-        path = bfs(cur, visited)
+        # print("hit else", cur.id)
+        i = -1
+        randomChoice = exits[i]
+        while visited[cur.id][randomChoice] != '?':
+            if i == len(exits)-1:
+                break
+            randomChoice = exits[i]
+            i+=1
 
-        if path:
-            print("backtracked else")
+        if visited[cur.id][randomChoice] == '?':
+            traversal_path.append(randomChoice)
+            player.travel(randomChoice)
             dftStack.append(player.current_room)
+            visited[cur.id][randomChoice] = player.current_room.id
+            
+            if player.current_room.id not in visited:
+                visited[player.current_room.id] = {}
+                for paths in player.current_room.get_exits():
+                    visited[player.current_room.id][paths] = '?'
+
+            if randomChoice == 'n':
+                visited[player.current_room.id]['s'] = cur.id
+            elif randomChoice == 'e':
+                visited[player.current_room.id]['w'] = cur.id
+            elif randomChoice == 'w':
+                visited[player.current_room.id]['e'] = cur.id
+            elif randomChoice == 's':
+                visited[player.current_room.id]['n'] = cur.id                    
         else:
-            print('no backtrack else')
-            loop = False
-            break
+            # print("currently couldnt get the path", cur.id)
+            path = bfs(cur, visited)
+
+            # print(path, cur.id, 'path')
+
+            if path:
+                backtrack(player.current_room.id, path, visited)
+                dftStack.append(player.current_room)
+            else:
+                loop = False
+                break
 
 
 
-print('traversal path', traversal_path)
+# print('traversal path', traversal_path)
 
 # TRAVERSAL TEST
 visited_rooms = set()
